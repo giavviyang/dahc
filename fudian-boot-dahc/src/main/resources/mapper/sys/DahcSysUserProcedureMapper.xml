@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fudian.dahc.mapper.sys.DahcSysUserProcedureMapper">
+
+    <resultMap type="com.fudian.dahc.pojo.entity.sys.DahcSysUserProcedure" id="DahcSysUserProcedureResult">
+        <result property="userId" column="user_id"/>
+        <result property="procedureId" column="procedure_id"/>
+    </resultMap>
+
+    <sql id="selectDahcSysUserProcedureVo">
+        select user_id, procedure_id
+        from dahc_sys_user_procedure
+    </sql>
+
+    <select id="selectDahcSysUserProcedureList" parameterType="com.fudian.dahc.pojo.entity.sys.DahcSysUserProcedure"
+            resultMap="DahcSysUserProcedureResult">
+        <include refid="selectDahcSysUserProcedureVo"/>
+        <where>
+            <if test="userId != null  and userId != ''">and user_id = #{userId}</if>
+            <if test="procedureId != null  and procedureId != ''">and procedure_id = #{procedureId}</if>
+        </where>
+    </select>
+
+    <select id="selectDahcSysUserProcedureByUserId" parameterType="String" resultMap="DahcSysUserProcedureResult">
+        <include refid="selectDahcSysUserProcedureVo"/>
+        where user_id = #{userId}
+    </select>
+
+    <insert id="insertDahcSysUserProcedure" parameterType="com.fudian.dahc.pojo.entity.sys.DahcSysUserProcedure">
+        insert into dahc_sys_user_procedure
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null and userId != ''">user_id,</if>
+            <if test="procedureId != null and procedureId != ''">procedure_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null and userId != ''">#{userId},</if>
+            <if test="procedureId != null and procedureId != ''">#{procedureId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDahcSysUserProcedure" parameterType="com.fudian.dahc.pojo.entity.sys.DahcSysUserProcedure">
+        update dahc_sys_user_procedure
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="procedureId != null and procedureId != ''">procedure_id = #{procedureId},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deleteDahcSysUserProcedureByUserId" parameterType="String">
+        delete
+        from dahc_sys_user_procedure
+        where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteDahcSysUserProcedureByUserIds" parameterType="String">
+        delete from dahc_sys_user_procedure where user_id in
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+
+    <insert id="saveUserProcedure" parameterType="com.fudian.dahc.pojo.entity.sys.DahcSysUserProcedure">
+        insert into dahc_sys_user_procedure
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null and userId != ''">user_id,</if>
+            procedure_id,
+            <if test="projectId != null and projectId != ''">project_id,</if>
+        </trim>
+        values
+        <foreach collection="procedureIds" index="index" item="item" separator="," >
+        (
+        #{userId},
+        #{item},
+        #{projectId}
+
+            )
+        </foreach>
+    </insert>
+</mapper>

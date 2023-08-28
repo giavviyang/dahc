@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fudian.dahc.mapper.business.DahcDataTemplateMapper">
+
+    <!--插入数据存储表-->
+    <insert id="bulkAdditions">
+        INSERT IGNORE INTO ${tableName}(
+        id,project_id,batch_no,remarks,pid,create_by,create_time, attr0, attr1, attr2, attr3, attr4, attr5, attr6,
+        attr7, attr8, attr9,
+        attr10,
+        attr11, attr12,
+        attr13, attr14, attr15, attr16, attr17, attr18, attr19, attr20, attr21, attr22, attr23, attr24, attr25, attr26,
+        attr27, attr28, attr29, attr30, attr31, attr32, attr33, attr34, attr35, attr36, attr37, attr38, attr39
+        )VALUES
+        <foreach collection="dahcDataTemplateList" item="item" separator=",">
+            (#{item.id},#{projectId},#{batchNo},#{desc},#{item.pid},#{userId},NOW(),
+            #{item.attr0},#{item.attr1},#{item.attr2},#{item.attr3},#{item.attr4},
+            #{item.attr5},#{item.attr6},#{item.attr7},#{item.attr8},#{item.attr9},
+            #{item.attr10},#{item.attr11},#{item.attr12},#{item.attr13},#{item.attr14},
+            #{item.attr15},#{item.attr16},#{item.attr17},#{item.attr18},#{item.attr19},
+            #{item.attr20},#{item.attr21},#{item.attr22},#{item.attr23},#{item.attr24},
+            #{item.attr25},#{item.attr26},#{item.attr27},#{item.attr28},#{item.attr29},
+            #{item.attr30},#{item.attr31},#{item.attr32},#{item.attr33},#{item.attr34},
+            #{item.attr35},#{item.attr36},#{item.attr37},#{item.attr38},#{item.attr39})
+        </foreach>
+    </insert>
+    <!--  INSERT IGNORE  ON DUPLICATE KEY UPDATE ${attr0}=values(${attr0})-->
+    <select id="readMetadata" resultType="java.util.Map">
+        SELECT *
+        FROM ${tableName}
+        WHERE status = #{status}
+          and ${attrName} = #{attr0}
+        ORDER BY id ASC
+    </select>
+
+
+    <select id="readMetadataLimit" resultType="java.util.Map">
+        SELECT *
+        FROM ${tableName}
+        WHERE status = #{status}
+        <if test="attrName !=null and attr0 !=null">
+            and ${attrName} = #{attr0}
+        </if>
+        ORDER BY id ASC
+        <if test="pageNum !=null and pageSize !=null">
+            limit ${pageNum},${pageSize} <!-- 正确写法 -->
+        </if>
+    </select>
+
+    <select id="checkTheNumberOfCasesCount" resultType="java.util.Map">
+        select attr.id
+        from ${archiveLevelName} attr
+        where attr.project_id = #{projectId}
+        and attr.pid in (
+        <foreach collection="pid" item="item" separator=",">
+            #{item}
+        </foreach>
+        )
+
+    </select>
+
+
+    <select id="queryTheDatabaseColumnNames" resultType="java.util.Map">
+        SELECT (@i := @i + 1) i, COLUMN_NAME
+        FROM information_schema.COLUMNS,
+             (select @i := 0) i
+        WHERE TABLE_SCHEMA = #{databaseName}
+          AND TABLE_NAME = #{tableName};
+    </select>
+
+
+    <select id="queryCaseFileDataBasedOnBatches" resultType="java.util.Map">
+        SELECT *,Cast(id as char) as id FROM ${archiveLevelName} n
+        WHERE 1=1
+        and project_id = #{projectId}
+        <if test="batchNo != null and batchNo != '' ">
+            and batch_no = #{batchNo}
+        </if>
+
+        <if test="caseNum != null and caseNum != '' ">
+            and ${attrOrder} like concat ( '%', #{caseNum}, '%')
+        </if>
+
+    </select>
+
+    <select id="accessPersonalVerificationData" resultType="java.util.Map">
+        SELECT *,f.procedure_id procedureId,f.is_procedure_inspect isProcedureInspect,f.files_id filesId,f.inspect_id
+        inspectId,f.impeach_solve_id impeachSolveId
+        FROM dahc_record_procedure_files f
+        INNER JOIN ${archiveLevelName} attr ON attr.id = f.files_id
+        <if test="inspectId!=null and inspectId  != '' ">
+            INNER JOIN dahc_sys_user_procedure up ON up.procedure_id = f.procedure_id
+        </if>
+        WHERE
+        f.project_id = #{projectId}
+        <if test="isProcedureInspect!=null and isProcedureInspect != '' ">
+            and f.is_procedure_inspect = #{isProcedureInspect}
+        </if>
+        <if test="procedureId!=null and procedureId != '' ">
+            and f.procedure_id = #{procedureId}
+        </if>
+
+        <if test="caseNum!=null and caseNum != '' ">
+            and f.files_name like concat ( '%', #{caseNum}, '%')
+        </if>
+
+        <if test="inspectId!=null and inspectId  != '' ">
+            <!-- and f.inspect_id like concat ( '%', #{inspectId}, '%')-->
+            and f.inspect_id = #{inspectId}
+            and up.user_id = #{inspectId}
+        </if>
+    </select>
+
+    <select id="notClaimedAccessPersonalVerificationData" resultType="java.util.Map">
+        SELECT *,f.procedure_id procedureId,f.is_procedure_inspect isProcedureInspect,f.files_id filesId,f.inspect_id
+        inspectId,f.impeach_solve_id impeachSolveId
+        FROM dahc_record_procedure_files f
+        INNER JOIN ${archiveLevelName} attr ON attr.id = f.files_id
+        INNER JOIN dahc_sys_user_procedure u ON u.procedure_id = f.procedure_id
+        WHERE
+        f.project_id = #{projectId}
+        <if test="isProcedureInspect!=null and isProcedureInspect != '' ">
+            and f.is_procedure_inspect = #{isProcedureInspect}
+        </if>
+        <if test="procedureId!=null and procedureId != '' ">
+            and f.procedure_id = #{procedureId}
+        </if>
+
+        <if test="caseNum!=null and caseNum != '' ">
+            and f.files_name like concat ( '%', #{caseNum}, '%')
+        </if>
+        and u.user_id = #{inspectId}
+    </select>
+
+    <select id="queryPersonalDoubtfulData" resultType="java.util.Map">
+        SELECT attr.*,f.id as filesId,f.procedure_id procedureId,f.is_procedure_inspect isProcedureInspect
+        FROM dahc_record_procedure_files f
+        INNER JOIN ${archiveLevelName} attr ON attr.id = f.files_id
+        inner join dahc_sys_user_procedure p on f.procedure_id = p.procedure_id
+        WHERE
+        f.project_id = #{projectId}
+        and f.is_impeach = 0
+        <if test="procedureId!=null and procedureId != '' ">
+            and f.procedure_id = #{procedureId}
+        </if>
+
+        <if test="caseNum!=null and caseNum != '' ">
+            and f.files_name like concat ( '%', #{caseNum}, '%')
+        </if>
+
+        <if test="inspectId!=null and inspectId  != '' ">
+            and f.inspect_id = #{inspectId}
+        </if>
+
+        GROUP BY f.files_name,f.procedure_id
+    </select>
+
+    <select id="queryBasedOnPrimaryKeyIDData" resultType="java.util.Map">
+        select *,Cast(id as char) as filesId
+        from ${profileDataTableName}
+        where id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+        <if test="caseNum != null and caseNum != ''">
+            and ${attrOrder} like concat ( '%', #{caseNum}, '%')
+        </if>
+    </select>
+
+    <select id="mybatisStreamQueryBybatch" resultType="java.util.Map">
+        SELECT id,${attr} FROM ${tableName} where project_id = #{projectId} and batch_no in (
+        <foreach collection="batchNo" item="item" separator=",">
+            #{item}
+        </foreach>
+        )
+    </select>
+    <select id="queryDataThatHasNotBeenCheckedAll" resultType="java.util.Map">
+        SELECT * FROM ${tableName}
+        where status = 1
+        <if test="projectId != null and projectId != ''">
+            and project_id = #{projectId}
+        </if>
+        <if test="fileIds != null and fileIds.size()> 0">
+            and pid in (
+            <foreach collection="fileIds" item="item" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+    </select>
+
+    <update id="modifyTheSort">
+        UPDATE ${caseTableName} dpp1,${caseTableName} dpp2
+        <set>
+            dpp1.${attrOrder}=(
+            SELECT t1.index1 FROM (
+            SELECT dpp3.${attrOrder} index1 FROM ${caseTableName} dpp3 WHERE dpp3.id=#{id2}
+            ) t1
+            ),
+            dpp2.${attrOrder}=(
+            SELECT t2.index2 FROM (
+            SELECT dpp4.${attrOrder} index2 FROM ${caseTableName} dpp4 WHERE dpp4.id=#{id1}
+            ) t2
+        </set>
+        ) where dpp1.id=#{id1} AND dpp2.id=#{id2}
+    </update>
+</mapper>

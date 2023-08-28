@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fudian.dahc.mapper.recordTrueing.DahcRecordTrueingResultManageMapper">
+
+    <resultMap type="com.fudian.dahc.pojo.entity.recordTrueing.DahcRecordTrueingResultManage"
+               id="DahcRecordTrueingResultManageResult">
+        <result property="id" column="id"/>
+        <result property="archiveTypeId" column="archive_type_id"/>
+        <result property="archiveTypeName" column="archive_type_name"/>
+        <result property="archiveTypeLv" column="archive_type_lv"/>
+        <result property="fileId" column="file_id"/>
+        <result property="pageNum" column="page_num"/>
+        <result property="record" column="record"/>
+        <result property="numberOfCases" column="number_of_cases"/>
+        <result property="inspectResultId" column="inspect_result_id"/>
+    </resultMap>
+
+    <sql id="selectDahcRecordTrueingResultManageVo">
+        select id,
+               archive_type_id,
+               archive_type_name,
+               archive_type_lv,
+               file_id,
+               page_num,
+               record,
+               number_of_cases,
+               inspect_result_id
+        from dahc_record_trueing_result_manage
+    </sql>
+
+    <select id="selectDahcRecordTrueingResultManageList"
+            parameterType="com.fudian.dahc.pojo.entity.recordTrueing.DahcRecordTrueingResultManage"
+            resultMap="DahcRecordTrueingResultManageResult">
+        <include refid="selectDahcRecordTrueingResultManageVo"/>
+        <where>
+            <if test="archiveTypeId != null  and archiveTypeId != ''">and archive_type_id = #{archiveTypeId}</if>
+            <if test="archiveTypeName != null  and archiveTypeName != ''">and archive_type_name like concat('%',
+                #{archiveTypeName}, '%')
+            </if>
+            <if test="archiveTypeLv != null ">and archive_type_lv = #{archiveTypeLv}</if>
+            <if test="fileId != null  and fileId != ''">and file_id = #{fileId}</if>
+            <if test="pageNum != null  and pageNum != ''">and page_num = #{pageNum}</if>
+            <if test="record != null  and record != ''">and record = #{record}</if>
+            <if test="numberOfCases != null  and numberOfCases != ''">and number_of_cases = #{numberOfCases}</if>
+            <if test="inspectResultId != null  and inspectResultId != ''">and inspect_result_id = #{inspectResultId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectDahcRecordTrueingResultManageById" parameterType="String"
+            resultMap="DahcRecordTrueingResultManageResult">
+        <include refid="selectDahcRecordTrueingResultManageVo"/>
+        where id = #{id}
+    </select>
+
+<!--    <insert id="insertDahcRecordTrueingResultManage"-->
+<!--            parameterType="com.fudian.dahc.pojo.entity.recordTrueing.DahcRecordTrueingResultManage">-->
+<!--        insert into dahc_record_trueing_result_manage-->
+<!--        <trim prefix="(" suffix=")" suffixOverrides=",">-->
+<!--            id,-->
+<!--            archive_type_id,-->
+<!--            archive_type_name,-->
+<!--            archive_type_lv,-->
+<!--            file_id,-->
+<!--            page_num_file,-->
+<!--            record,-->
+<!--            number_of_cases,-->
+<!--            inspect_result_id-->
+<!--        </trim>-->
+<!--        values-->
+<!--        <foreach collection="resultManages" item="item" open="(" separator=","  close=")">-->
+<!--            #{item.id},-->
+<!--            #{item.archiveTypeId},-->
+<!--            #{item.archiveTypeName},-->
+<!--            #{item.archiveTypeLv},-->
+<!--            #{item.fileId},-->
+<!--            #{item.pageNumFile},-->
+<!--            #{item.record},-->
+<!--            #{item.numberOfCases},-->
+<!--            #{item.inspectResultId},-->
+<!--        </foreach>-->
+<!--    </insert>-->
+
+
+    <update id="updateDahcRecordTrueingResultManage"
+            parameterType="com.fudian.dahc.pojo.entity.recordTrueing.DahcRecordTrueingResultManage">
+        update dahc_record_trueing_result_manage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="archiveTypeId != null">archive_type_id = #{archiveTypeId},</if>
+            <if test="archiveTypeName != null">archive_type_name = #{archiveTypeName},</if>
+            <if test="archiveTypeLv != null">archive_type_lv = #{archiveTypeLv},</if>
+            <if test="fileId != null">file_id = #{fileId},</if>
+            <if test="pageNum != null">page_num = #{pageNum},</if>
+            <if test="record != null">record = #{record},</if>
+            <if test="numberOfCases != null">number_of_cases = #{numberOfCases},</if>
+            <if test="inspectResultId != null">inspect_result_id = #{inspectResultId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDahcRecordTrueingResultManageById" parameterType="String">
+        delete
+        from dahc_record_trueing_result_manage
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteDahcRecordTrueingResultManageByIds" parameterType="String">
+        delete from dahc_record_trueing_result_manage where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

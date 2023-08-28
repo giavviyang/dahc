@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fudian.dahc.mapper.trueingManage.DahcHcxTrueingManagementMapper">
+
+    <resultMap type="com.fudian.dahc.pojo.entity.trueingManage.DahcHcxTrueingManagement" id="DahcHcxTrueingManagementResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="trueingName" column="trueing_name"/>
+        <result property="tableType" column="table_type"/>
+        <result property="trueingDesc" column="trueing_desc"/>
+        <result property="trueingRemark" column="trueing_remark"/>
+        <result property="trueingType" column="trueing_type"/>
+        <result property="showPiece" column="show_piece"/>
+        <result property="showRecord" column="show_record"/>
+        <result property="trueingScopeStair" column="trueing_scope_stair"/>
+        <result property="showPageNumber" column="show_page_number"/>
+        <result property="trueingTreeRank" column="trueing_tree_rank"/>
+    </resultMap>
+
+    <sql id="selectDahcHcxTrueingManagementVo">
+        select id,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               trueing_name,
+               table_type,
+               trueing_desc,
+               trueing_remark,
+               trueing_type,
+               show_piece,
+               show_record,
+               trueing_scope_stair,
+               show_page_number,
+               trueing_tree_rank
+        from dahc_hcx_trueing_management
+    </sql>
+
+    <select id="selectDahcHcxTrueingManagementList"
+            parameterType="com.fudian.dahc.pojo.entity.trueingManage.DahcHcxTrueingManagement"
+            resultMap="DahcHcxTrueingManagementResult">
+        <include refid="selectDahcHcxTrueingManagementVo"/>
+        <where>
+            <if test="trueingName != null  and trueingName != ''">and trueing_name like concat('%', #{trueingName},
+                '%')
+            </if>
+            <if test="tableType != null  and tableType != ''">and table_type = #{tableType}</if>
+            <if test="trueingDesc != null  and trueingDesc != ''">and trueing_desc = #{trueingDesc}</if>
+            <if test="trueingRemark != null  and trueingRemark != ''">and trueing_remark = #{trueingRemark}</if>
+            <if test="trueingType != null  and trueingType != ''">and trueing_type = #{trueingType}</if>
+            <if test="showPiece != null  and showPiece != ''">and show_piece = #{showPiece}</if>
+            <if test="showRecord != null  and showRecord != ''">and show_record = #{showRecord}</if>
+            <if test="trueingScopeStair != null  and trueingScopeStair != ''">and trueing_scope_stair =
+                #{trueingScopeStair}
+            </if>
+            <if test="showPageNumber != null  and showPageNumber != ''">and show_page_number = #{showPageNumber}</if>
+            <if test="trueingTreeRank != null ">and trueing_tree_rank = #{trueingTreeRank}</if>
+        </where>
+    </select>
+
+    <select id="selectTrueingScopeStairList" parameterType="com.fudian.dahc.pojo.entity.trueingManage.DahcHcxTrueingManagement"
+            resultMap="DahcHcxTrueingManagementResult">
+        <include refid="selectDahcHcxTrueingManagementVo"/>
+        <where>
+            <if test="trueingName != null  and trueingName != ''">and trueing_name like concat('%', #{trueingName},
+                '%')
+            </if>
+            <if test="tableType != null  and tableType != ''">and table_type = #{tableType}</if>
+            <if test="trueingDesc != null  and trueingDesc != ''">and trueing_desc = #{trueingDesc}</if>
+            <if test="trueingRemark != null  and trueingRemark != ''">and trueing_remark = #{trueingRemark}</if>
+            <if test="trueingType != null  and trueingType != ''">and trueing_type = #{trueingType}</if>
+            <if test="showPiece != null  and showPiece != ''">and show_piece = #{showPiece}</if>
+            <if test="showRecord != null  and showRecord != ''">and show_record = #{showRecord}</if>
+            <if test="trueingScopeStair != null  and trueingScopeStair != ''">and trueing_scope_stair in
+                <foreach item="transitionId" collection="transitionIds" open="(" separator="," close=")">
+                    #{transitionId}
+                </foreach>
+            </if>
+            <if test="showPageNumber != null  and showPageNumber != ''">and show_page_number = #{showPageNumber}</if>
+            <if test="trueingTreeRank != null ">and trueing_tree_rank = #{trueingTreeRank}</if>
+        </where>
+    </select>
+
+    <select id="selectDahcHcxTrueingManagementById" parameterType="Long" resultMap="DahcHcxTrueingManagementResult">
+        <include refid="selectDahcHcxTrueingManagementVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="queryProcedureTrueingIds" parameterType="String" resultMap="DahcHcxTrueingManagementResult">
+        SELECT *
+        FROM `dahc_project_procedure_trueing` t
+                 right  Join dahc_hcx_trueing_management d on t.trueing_id = d.id
+        where t.procedure_id = #{procedureId}
+        ORDER BY t.sort
+    </select>
+
+    <insert id="insertDahcHcxTrueingManagement"
+            parameterType="com.fudian.dahc.pojo.entity.trueingManage.DahcHcxTrueingManagement">
+        insert into dahc_hcx_trueing_management
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="trueingName != null and trueingName != ''">trueing_name,</if>
+            <if test="tableType != null">table_type,</if>
+            <if test="trueingDesc != null">trueing_desc,</if>
+            <if test="trueingRemark != null">trueing_remark,</if>
+            <if test="trueingType != null">trueing_type,</if>
+            <if test="showPiece != null">show_piece,</if>
+            <if test="showRecord != null">show_record,</if>
+            <if test="trueingScopeStair != null">trueing_scope_stair,</if>
+            <if test="showPageNumber != null">show_page_number,</if>
+            <if test="trueingTreeRank != null">trueing_tree_rank,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="trueingName != null and trueingName != ''">#{trueingName},</if>
+            <if test="tableType != null">#{tableType},</if>
+            <if test="trueingDesc != null">#{trueingDesc},</if>
+            <if test="trueingRemark != null">#{trueingRemark},</if>
+            <if test="trueingType != null">#{trueingType},</if>
+            <if test="showPiece != null">#{showPiece},</if>
+            <if test="showRecord != null">#{showRecord},</if>
+            <if test="trueingScopeStair != null">#{trueingScopeStair},</if>
+            <if test="showPageNumber != null">#{showPageNumber},</if>
+            <if test="trueingTreeRank != null">#{trueingTreeRank},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDahcHcxTrueingManagement"
+            parameterType="com.fudian.dahc.pojo.entity.trueingManage.DahcHcxTrueingManagement">
+        update dahc_hcx_trueing_management
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="trueingName != null and trueingName != ''">trueing_name = #{trueingName},</if>
+            <if test="tableType != null">table_type = #{tableType},</if>
+            <if test="trueingDesc != null">trueing_desc = #{trueingDesc},</if>
+            <if test="trueingRemark != null">trueing_remark = #{trueingRemark},</if>
+            <if test="trueingType != null">trueing_type = #{trueingType},</if>
+            <if test="showPiece != null">show_piece = #{showPiece},</if>
+            <if test="showRecord != null">show_record = #{showRecord},</if>
+            <if test="trueingScopeStair != null">trueing_scope_stair = #{trueingScopeStair},</if>
+            <if test="showPageNumber != null">show_page_number = #{showPageNumber},</if>
+            <if test="trueingTreeRank != null">trueing_tree_rank = #{trueingTreeRank},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDahcHcxTrueingManagementById" parameterType="Long">
+        delete
+        from dahc_hcx_trueing_management
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteDictDataById" parameterType="String">
+        delete
+        from dahc_hcx_trueing_management
+        where trueing_scope_stair = #{trueingScopeStair}
+    </delete>
+
+    <delete id="deleteDahcHcxTrueingManagementByIds" parameterType="String">
+        delete from dahc_hcx_trueing_management where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+    <resultMap type="com.fudian.dahc.pojo.entity.trueingManage.ProcedureInspectDto" id="procedureInspect">
+        <result property="projectId" column="project_id"/>
+        <result property="procedureId" column="procedure_id"/>
+        <result property="trueingId" column="id"/>
+        <result property="trueingName" column="trueing_name"/>
+        <result property="tableType" column="table_type"/>
+        <result property="trueingDesc" column="trueing_desc"/>
+        <result property="trueingRemark" column="trueing_remark"/>
+        <result property="trueingType" column="trueing_type"/>
+        <result property="showPiece" column="show_piece"/>
+        <result property="showRecord" column="show_record"/>
+        <result property="trueingScopeStair" column="trueing_scope_stair"/>
+        <result property="showPageNumber" column="show_page_number"/>
+        <result property="trueingTreeRank" column="trueing_tree_rank"/>
+    </resultMap>
+
+    <select id="queryProcedureInspect" parameterType="com.fudian.dahc.pojo.dto.RecordTrueingDto" resultMap="procedureInspect">
+        SELECT
+            *
+        FROM
+            dahc_project_table p
+                LEFT join dahc_project_procedure d on p.id = d.project_id
+                left join dahc_project_procedure_trueing t on d.id = t.procedure_id
+                left join dahc_hcx_trueing_management m on t.trueing_id = m.id
+        where p.id = '1627577887544229890' and d.id='7fff58ffc78248dfb2ea86397b8eec20'
+        GROUP BY m.id
+    </select>
+</mapper>

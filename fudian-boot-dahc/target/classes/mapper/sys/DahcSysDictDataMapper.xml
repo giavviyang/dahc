@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fudian.dahc.mapper.sys.DahcSysDictDataMapper">
+
+  <resultMap type="com.fudian.dahc.pojo.entity.sys.DahcSysDictData" id="DahcSysDictDataResult">
+    <result property="id"    column="id"    />
+    <result property="dictType"    column="dict_type"    />
+    <result property="dictCode"    column="dict_code"    />
+    <result property="eparentCode"    column="eparent_code"    />
+    <result property="fullName"    column="full_name"    />
+    <result property="nickerName"    column="nicker_name"    />
+    <result property="pinyin"    column="pinyin"    />
+    <result property="codeProperty"    column="code_property"    />
+    <result property="codeAttr"    column="code_attr"    />
+    <result property="createTime"    column="create_time"    />
+    <result property="updateBy"    column="update_by"    />
+    <result property="updateTime"    column="update_time"    />
+    <result property="remark"    column="remark"    />
+    <result property="createBy"    column="create_by"    />
+    <result property="type"    column="type"    />
+  </resultMap>
+
+  <sql id="selectDahcSysDictDataVo">
+    select id, dict_type, dict_code, eparent_code, full_name, nicker_name, pinyin, code_property, code_attr, create_time, update_by, update_time, remark, create_by, type from dahc_sys_dict_data
+  </sql>
+
+  <select id="selectDahcSysDictDataList" parameterType="com.fudian.dahc.pojo.entity.sys.DahcSysDictData" resultMap="DahcSysDictDataResult">
+    <include refid="selectDahcSysDictDataVo"/>
+    <where>
+      <if test="dictType != null  and dictType != ''"> and dict_type = #{dictType}</if>
+      <if test="dictCode != null  and dictCode != ''"> and dict_code = #{dictCode}</if>
+      <if test="eparentCode != null  and eparentCode != ''"> and eparent_code = #{eparentCode}</if>
+      <if test="fullName != null  and fullName != ''"> and full_name like concat('%', #{fullName}, '%')</if>
+      <if test="nickerName != null  and nickerName != ''"> and nicker_name like concat('%', #{nickerName}, '%')</if>
+      <if test="pinyin != null  and pinyin != ''"> and pinyin = #{pinyin}</if>
+      <if test="codeProperty != null  and codeProperty != ''"> and code_property = #{codeProperty}</if>
+      <if test="codeAttr != null "> and code_attr = #{codeAttr}</if>
+      <if test="type != null "> and type = #{type}</if>
+    </where>
+  </select>
+
+  <select id="selectDahcSysDictDataById" parameterType="String" resultMap="DahcSysDictDataResult">
+    <include refid="selectDahcSysDictDataVo"/>
+    where id = #{id}
+  </select>
+
+  <insert id="insertDahcSysDictData" parameterType="com.fudian.dahc.pojo.entity.sys.DahcSysDictData">
+    insert into dahc_sys_dict_data
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">id,</if>
+      <if test="dictType != null">dict_type,</if>
+      <if test="dictCode != null">dict_code,</if>
+      <if test="eparentCode != null">eparent_code,</if>
+      <if test="fullName != null">full_name,</if>
+      <if test="nickerName != null">nicker_name,</if>
+      <if test="pinyin != null">pinyin,</if>
+      <if test="codeProperty != null">code_property,</if>
+      <if test="codeAttr != null">code_attr,</if>
+      <if test="createTime != null">create_time,</if>
+      <if test="updateBy != null">update_by,</if>
+      <if test="updateTime != null">update_time,</if>
+      <if test="remark != null">remark,</if>
+      <if test="createBy != null">create_by,</if>
+      <if test="type != null">type,</if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">#{id},</if>
+      <if test="dictType != null">#{dictType},</if>
+      <if test="dictCode != null">#{dictCode},</if>
+      <if test="eparentCode != null">#{eparentCode},</if>
+      <if test="fullName != null">#{fullName},</if>
+      <if test="nickerName != null">#{nickerName},</if>
+      <if test="pinyin != null">#{pinyin},</if>
+      <if test="codeProperty != null">#{codeProperty},</if>
+      <if test="codeAttr != null">#{codeAttr},</if>
+      <if test="createTime != null">#{createTime},</if>
+      <if test="updateBy != null">#{updateBy},</if>
+      <if test="updateTime != null">#{updateTime},</if>
+      <if test="remark != null">#{remark},</if>
+      <if test="createBy != null">#{createBy},</if>
+      <if test="type != null">#{type},</if>
+    </trim>
+  </insert>
+
+  <update id="updateDahcSysDictData" parameterType="com.fudian.dahc.pojo.entity.sys.DahcSysDictData">
+    update dahc_sys_dict_data
+    <trim prefix="SET" suffixOverrides=",">
+      <if test="dictType != null">dict_type = #{dictType},</if>
+      <if test="dictCode != null">dict_code = #{dictCode},</if>
+      <if test="eparentCode != null">eparent_code = #{eparentCode},</if>
+      <if test="fullName != null">full_name = #{fullName},</if>
+      <if test="nickerName != null">nicker_name = #{nickerName},</if>
+      <if test="pinyin != null">pinyin = #{pinyin},</if>
+      <if test="codeProperty != null">code_property = #{codeProperty},</if>
+      <if test="codeAttr != null">code_attr = #{codeAttr},</if>
+      <if test="createTime != null">create_time = #{createTime},</if>
+      <if test="updateBy != null">update_by = #{updateBy},</if>
+      <if test="updateTime != null">update_time = #{updateTime},</if>
+      <if test="remark != null">remark = #{remark},</if>
+      <if test="createBy != null">create_by = #{createBy},</if>
+      <if test="type != null">type = #{type},</if>
+    </trim>
+    where id = #{id}
+  </update>
+
+  <delete id="deleteDahcSysDictDataById" parameterType="String">
+    delete from dahc_sys_dict_data where id = #{id}
+  </delete>
+
+  <delete id="deleteDahcSysDictDataByIds" parameterType="String">
+    delete from dahc_sys_dict_data where id in
+    <foreach item="id" collection="array" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+     or eparent_code in
+    <foreach item="id" collection="array" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </delete>
+</mapper>

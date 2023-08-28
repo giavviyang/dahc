@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="fudian-boot-dahc" />
+        <module name="fudian-boot-framework" />
+        <module name="fudian-boot-admin" />
+        <module name="fudian-boot-quartz" />
+        <module name="fudian-boot-common" />
+        <module name="fudian-boot-system" />
+        <module name="fudian-boot-generator" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>

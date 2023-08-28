@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fudian.dahc.mapper.log.DahcCheckRecordLogMapper">
+
+    <resultMap type="com.fudian.dahc.pojo.entity.log.DahcCheckRecordLog" id="DahcCheckRecordLogResult">
+        <result property="id" column="id"/>
+        <result property="buttonName" column="button_name"/>
+        <result property="projectName" column="project_name"/>
+        <result property="projectId" column="project_id"/>
+        <result property="procedureName" column="procedure_name"/>
+        <result property="procedureId" column="procedure_id"/>
+        <result property="caseTableName" column="case_table_name"/>
+        <result property="fileTableName" column="file_table_name"/>
+        <result property="caseFileNumber1" column="case_file_number1"/>
+        <result property="caseNumber2" column="case_number2"/>
+        <result property="fileTableNameId" column="file_table_name_id"/>
+        <result property="caseNumberId" column="case_number_id"/>
+        <result property="isImg" column="is_img"/>
+        <result property="imgPageNumber" column="img_page_number"/>
+        <result property="sourcePicturePath" column="source_picture_path"/>
+        <result property="sourcePictureName" column="source_picture_name"/>
+        <result property="sourceFilePhotoId" column="source_file_photo_id"/>
+        <result property="insertSourcePicturePath" column="insert_source_picture_path"/>
+        <result property="insertSourcePictureName" column="insert_source_picture_name"/>
+        <result property="insertFilePhotoId" column="insert_file_photo_id"/>
+        <result property="submitButton" column="submit_button"/>
+        <result property="sourceDataJson" column="source_data_json"/>
+        <result property="nowDataJson" column="now_data_json"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectDahcCheckRecordLogVo">
+        select id,
+               button_name,
+               project_name,
+               project_id,
+               procedure_name,
+               procedure_id,
+               case_table_name,
+               file_table_name,
+               case_file_number1,
+               case_number2,
+               file_table_name_id,
+               case_number_id,
+               is_img,
+               img_page_number,
+               source_picture_path,
+               source_picture_name,
+               source_file_photo_id,
+               insert_source_picture_path,
+               insert_source_picture_name,
+               insert_file_photo_id,
+               submit_button,
+               source_data_json,
+               now_data_json,
+               create_by,
+               create_time,
+               check_status
+        from dahc_check_record_log
+    </sql>
+
+    <select id="selectDahcCheckRecordLogList" parameterType="com.fudian.dahc.pojo.entity.log.DahcCheckRecordLog"
+            resultMap="DahcCheckRecordLogResult">
+        <!--        <include refid="selectDahcCheckRecordLogVo"/>-->
+        select * from dahc_check_record_log
+        <where>
+
+            <if test="buttonName != null  and buttonName != ''">and button_name like concat('%', #{buttonName}, '%')
+            </if>
+            <if test="projectName != null  and projectName != ''">and project_name like concat('%', #{projectName},
+                '%')
+            </if>
+            <if test="projectId != null  and projectId != ''">and project_id = #{projectId}</if>
+            <if test="procedureName != null  and procedureName != ''">and procedure_name like concat('%',
+                #{procedureName}, '%')
+            </if>
+            <if test="procedureId != null  and procedureId != ''">and procedure_id = #{procedureId}</if>
+            <if test="caseTableName != null  and caseTableName != ''">and case_table_name like concat('%',
+                #{caseTableName}, '%')
+            </if>
+            <if test="fileTableName != null  and fileTableName != ''">and file_table_name like concat('%',
+                #{fileTableName}, '%')
+            </if>
+            <if test="caseFileNumber1 != null  and caseFileNumber1 != ''">and case_file_number1 = #{caseFileNumber1}
+            </if>
+            <if test="caseNumber2 != null  and caseNumber2 != ''">and case_number2 = #{caseNumber2}</if>
+            <if test="fileTableNameId != null  and fileTableNameId != ''">and file_table_name_id = #{fileTableNameId}
+            </if>
+            <if test="caseNumberId != null  and caseNumberId != ''">and case_number_id = #{caseNumberId}</if>
+            <if test="isImg != null ">and is_img = #{isImg}</if>
+            <if test="imgPageNumber != null  and imgPageNumber != ''">and img_page_number = #{imgPageNumber}</if>
+            <if test="sourcePicturePath != null  and sourcePicturePath != ''">and source_picture_path =
+                #{sourcePicturePath}
+            </if>
+            <if test="sourcePictureName != null  and sourcePictureName != ''">and source_picture_name like concat('%',
+                #{sourcePictureName}, '%')
+            </if>
+            <if test="sourceFilePhotoId != null  and sourceFilePhotoId != ''">and source_file_photo_id =
+                #{sourceFilePhotoId}
+            </if>
+            <if test="insertSourcePicturePath != null  and insertSourcePicturePath != ''">and insert_source_picture_path
+                = #{insertSourcePicturePath}
+            </if>
+            <if test="insertSourcePictureName != null  and insertSourcePictureName != ''">and insert_source_picture_name
+                like concat('%', #{insertSourcePictureName}, '%')
+            </if>
+            <if test="insertFilePhotoId != null  and insertFilePhotoId != ''">and insert_file_photo_id =
+                #{insertFilePhotoId}
+            </if>
+            <if test="submitButton != null ">and submit_button = #{submitButton}</if>
+            <if test="sourceDataJson != null  and sourceDataJson != ''">and source_data_json = #{sourceDataJson}</if>
+            <if test="nowDataJson != null  and nowDataJson != ''">and now_data_json = #{nowDataJson}</if>
+            <if test="checkStatus != null  and checkStatus != ''">and now_data_json = #{checkStatus}</if>
+        </where>
+        order by  create_time DESC
+    </select>
+
+    <select id="selectDahcCheckRecordLogById" parameterType="String" resultMap="DahcCheckRecordLogResult">
+        <include refid="selectDahcCheckRecordLogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDahcCheckRecordLog" parameterType="com.fudian.dahc.pojo.entity.log.DahcCheckRecordLog">
+        insert into dahc_check_record_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">id,</if>
+            <if test="buttonName != null">button_name,</if>
+            <if test="projectName != null">project_name,</if>
+            <if test="projectId != null">project_id,</if>
+            <if test="procedureName != null">procedure_name,</if>
+            <if test="procedureId != null">procedure_id,</if>
+            <if test="caseTableName != null">case_table_name,</if>
+            <if test="fileTableName != null">file_table_name,</if>
+            <if test="caseFileNumber1 != null">case_file_number1,</if>
+            case_number2,
+            <if test="fileTableNameId != null">file_table_name_id,</if>
+            <if test="caseNumberId != null">case_number_id,</if>
+            <if test="isImg != null">is_img,</if>
+            <if test="imgPageNumber != null">img_page_number,</if>
+            <if test="sourcePicturePath != null">source_picture_path,</if>
+            <if test="sourcePictureName != null">source_picture_name,</if>
+            <if test="sourceFilePhotoId != null">source_file_photo_id,</if>
+            <if test="insertSourcePicturePath != null">insert_source_picture_path,</if>
+            <if test="insertSourcePictureName != null">insert_source_picture_name,</if>
+            <if test="insertFilePhotoId != null">insert_file_photo_id,</if>
+            <if test="submitButton != null">submit_button,</if>
+            <if test="sourceDataJson != null">source_data_json,</if>
+            <if test="nowDataJson != null">now_data_json,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="checkStatus != null">check_status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">#{id},</if>
+            <if test="buttonName != null">#{buttonName},</if>
+            <if test="projectName != null">#{projectName},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="procedureName != null">#{procedureName},</if>
+            <if test="procedureId != null">#{procedureId},</if>
+            <if test="caseTableName != null">#{caseTableName},</if>
+            <if test="fileTableName != null">#{fileTableName},</if>
+            <if test="caseFileNumber1 != null">#{caseFileNumber1},</if>
+            #{caseNumber2},
+            <if test="fileTableNameId != null">#{fileTableNameId},</if>
+            <if test="caseNumberId != null">#{caseNumberId},</if>
+            <if test="isImg != null">#{isImg},</if>
+            <if test="imgPageNumber != null">#{imgPageNumber},</if>
+            <if test="sourcePicturePath != null">#{sourcePicturePath},</if>
+            <if test="sourcePictureName != null">#{sourcePictureName},</if>
+            <if test="sourceFilePhotoId != null">#{sourceFilePhotoId},</if>
+            <if test="insertSourcePicturePath != null">#{insertSourcePicturePath},</if>
+            <if test="insertSourcePictureName != null">#{insertSourcePictureName},</if>
+            <if test="insertFilePhotoId != null">#{insertFilePhotoId},</if>
+            <if test="submitButton != null">#{submitButton},</if>
+            <if test="sourceDataJson != null">#{sourceDataJson},</if>
+            <if test="nowDataJson!= null">#{nowDataJson},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="checkStatus != null">#{checkStatus},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDahcCheckRecordLog" parameterType="com.fudian.dahc.pojo.entity.log.DahcCheckRecordLog">
+        update dahc_check_record_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="buttonName != null">button_name = #{buttonName},</if>
+            <if test="projectName != null">project_name = #{projectName},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="procedureName != null">procedure_name = #{procedureName},</if>
+            <if test="procedureId != null">procedure_id = #{procedureId},</if>
+            <if test="caseTableName != null">case_table_name = #{caseTableName},</if>
+            <if test="fileTableName != null">file_table_name = #{fileTableName},</if>
+            <if test="caseFileNumber1 != null">case_file_number1 = #{caseFileNumber1},</if>
+            <if test="caseNumber2 != null">case_number2 = #{caseNumber2},</if>
+            <if test="fileTableNameId != null">file_table_name_id = #{fileTableNameId},</if>
+            <if test="caseNumberId != null">case_number_id = #{caseNumberId},</if>
+            <if test="isImg != null">is_img = #{isImg},</if>
+            <if test="imgPageNumber != null">img_page_number = #{imgPageNumber},</if>
+            <if test="sourcePicturePath != null">source_picture_path = #{sourcePicturePath},</if>
+            <if test="sourcePictureName != null">source_picture_name = #{sourcePictureName},</if>
+            <if test="sourceFilePhotoId != null">source_file_photo_id = #{sourceFilePhotoId},</if>
+            <if test="insertSourcePicturePath != null">insert_source_picture_path = #{insertSourcePicturePath},</if>
+            <if test="insertSourcePictureName != null">insert_source_picture_name = #{insertSourcePictureName},</if>
+            <if test="insertFilePhotoId != null">insert_file_photo_id = #{insertFilePhotoId},</if>
+            <if test="submitButton != null">submit_button = #{submitButton},</if>
+            <if test="sourceDataJson != null">source_data_json = #{sourceDataJson},</if>
+            <if test="nowDataJson != null">now_data_json = #{nowDataJson},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDahcCheckRecordLogById" parameterType="String">
+        delete
+        from dahc_check_record_log
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteDahcCheckRecordLogByIds" parameterType="String">
+        delete from dahc_check_record_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

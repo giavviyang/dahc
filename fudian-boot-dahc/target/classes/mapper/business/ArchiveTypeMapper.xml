@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fudian.dahc.mapper.business.DahcArchiveTypeMapper">
+
+
+    <!--创建表的 SQL 语句-->
+    <update id="createDateTemplateTable" parameterType="java.lang.String">
+        CREATE TABLE IF NOT EXISTS `${tableName}`
+        (
+            `id`
+            bigint
+            NOT
+            NULL
+            AUTO_INCREMENT
+            COMMENT
+            '主键',
+            `project_id`
+            bigint
+            DEFAULT
+            NULL
+            COMMENT
+            '项目id',
+            `batch_no`
+            varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '批次号',
+            `status` char
+        (
+            1
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0' COMMENT '是否原件',
+            `pid` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '父id',
+            `remarks` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '备注',
+            `create_by` bigint DEFAULT NULL COMMENT '创建人id',
+            `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+            `update_by` bigint DEFAULT NULL COMMENT '修改人id',
+            `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+            `attr0` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr0',
+            `attr1` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr1',
+            `attr2` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr2',
+            `attr3` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr3',
+            `attr4` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr4',
+            `attr5` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr5',
+            `attr6` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr6',
+            `attr7` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr7',
+            `attr8` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr8',
+            `attr9` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr9',
+            `attr10` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr10',
+            `attr11` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr11',
+            `attr12` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr12',
+            `attr13` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr13',
+            `attr14` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr14',
+            `attr15` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr15',
+            `attr16` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr16',
+            `attr17` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr17',
+            `attr18` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr18',
+            `attr19` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr19',
+            `attr20` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr20',
+            `attr21` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr21',
+            `attr22` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr22',
+            `attr23` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr23',
+            `attr24` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr24',
+            `attr25` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr25',
+            `attr26` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr26',
+            `attr27` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr27',
+            `attr28` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr28',
+            `attr29` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr29',
+            `attr30` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr30',
+            `attr31` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr31',
+            `attr32` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr32',
+            `attr33` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr33',
+            `attr34` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr34',
+            `attr35` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr35',
+            `attr36` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr36',
+            `attr37` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr37',
+            `attr38` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr38',
+            `attr39` varchar
+        (
+            255
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'attr39',
+            PRIMARY KEY
+        (
+            `id`
+        )
+            ) ENGINE = InnoDB
+            AUTO_INCREMENT = 9
+            DEFAULT CHARSET = utf8mb4
+            COLLATE = utf8mb4_general_ci COMMENT ='数据存储表';
+    </update>
+
+
+    <resultMap id="queryListAndMetadataById" type="com.fudian.dahc.pojo.dto.DahcArchiveTypeAndMetadataVo">
+        <result property="id" column="id"/>
+        <result property="archiveName" column="archive_name"/>
+        <result property="tableLevel1En" column="table_level1_en"/>
+        <result property="tableLevel2En" column="table_level2_en"/>
+        <result property="archiveDesc" column="archive_desc"/>
+
+        <collection property="dahcMetadataList" javaType="java.util.List"
+                    ofType="com.fudian.dahc.pojo.dto.DahcMetadataVo">
+            <id property="metadataId" column="cid"/>
+            <id property="id" column="cid"/>
+            <result property="metadataName" column="metadata_name"/>
+            <result property="metadataType" column="metadata_type"/>
+            <result property="attrOrder" column="attr_order"/>
+            <result property="archiveLevelName" column="archive_level_name"/>
+            <result property="metadataWidth" column="metadata_width"/>
+            <result property="metadataDesc" column="metadata_desc"/>
+            <!--其他属性省略-->
+        </collection>
+    </resultMap>
+
+    <select id="selectListAndMetadataById" resultMap="queryListAndMetadataById">
+        SELECT a.*, b.archive_level_name,b.attr_order, c.id as cid, c.*
+        FROM dahc_archive_type a
+        LEFT JOIN dahc_business_archive_metadata b ON a.id = b.archive_type_id
+        LEFT JOIN dahc_business_metadata c ON b.metadata_id = c.id
+        <where>
+            <if test="typeId != null and typeId != ''">
+                and a.id = #{typeId}
+            </if>
+            <if test="level != null and level != ''">
+                and b.archive_level_name like CONCAT( '%' ,'dahc_dt',#{level},'%')
+            </if>
+        </where>
+        order by b.sort ASC
+    </select>
+
+
+    <resultMap id="queryArchiveAndMetadata" type="com.fudian.dahc.pojo.query.ArchiveAndMetadataDto">
+        <result property="archiveTypeId" column="archiveType_id"/>
+        <result property="archiveLevelName" column="archive_level_name"/>
+        <result property="metadataType" column="metadata_type"/>
+        <result property="metadataLong" column="metadata_long"/>
+        <result property="metadataId" column="metadata_id"/>
+        <result property="metadataDesc" column="metadata_desc"/>
+        <result property="sort" column="sort"/>
+    </resultMap>
+
+    <select id="queryArchiveAndMetadata" resultMap="queryArchiveAndMetadata">
+        SELECT *
+        FROM dahc_business_archive_metadata d
+                 inner join dahc_business_metadata m on d.metadata_id = m.id
+        where d.archive_level_name = #{archiveLevelName}
+        order by d.sort asc
+    </select>
+
+
+    <select id="queryCountArchiveLevelName" resultType="int"
+            parameterType="com.fudian.dahc.pojo.entity.business.DahcArchiveType">
+        select count(*) from dahc_archive_type a where a.archive_name = #{archiveName}
+        <if test="id!=null and id!=''">
+            and id !=#{id}
+        </if>
+    </select>
+
+    <insert id="addDefaultDataToTheProfileTypeInBulk" parameterType="java.util.List">
+        INSERT INTO dahc_business_archive_metadata ( archive_type_id, archive_level_name, attr_order, metadata_id,sort )
+        VALUES
+        <foreach collection="archiveMetadatas" item="archiveMetadata" index="index" separator=",">
+            (#{archiveMetadata.archiveTypeId},#{archiveMetadata.archiveLevelName},#{archiveMetadata.attrOrder},#{archiveMetadata.metadataId},#{archiveMetadata.attrOrder})
+        </foreach>
+    </insert>
+
+    <insert id="saveMetadataInBulk" parameterType="java.util.List">
+        INSERT IGNORE INTO dahc_business_archive_metadata ( archive_type_id, archive_level_name, attr_order, metadata_id
+        ,sort)
+        VALUES
+        <foreach collection="archiveAndMetadataVO.metadataDtos" item="archiveMetadata" index="index" separator=",">
+            (#{archiveAndMetadataVO.archiveTypeId},#{archiveAndMetadataVO.archiveLevelName},#{index},#{archiveMetadata.metadataId},#{index})
+        </foreach>
+        ON DUPLICATE KEY UPDATE sort=values(sort),attr_order=values(attr_order)
+    </insert>
+
+    <update id="modifyTemplateSerialNumbersInBulk"
+            parameterType="com.fudian.dahc.pojo.entity.business.DahcBusinessArchiveMetadata">
+
+        UPDATE dahc_business_mapper
+        <set>
+            <trim prefix="attr_ordinal = case" suffix="end,">
+                <foreach collection="dahcBusinessArchiveMetadata" item="item">
+                    when metadata_id=#{item.metadataId} then #{item.attrOrder}
+                </foreach>
+            </trim>
+        </set>
+
+        <where>
+            model_id in (#{modelIds})
+        </where>
+    </update>
+
+</mapper>

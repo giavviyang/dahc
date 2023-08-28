@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fudian.dahc.mapper.project.DahcProjectProcedureTrueingMapper">
+
+
+    <resultMap id="queryProcedureAndTrueing" type="com.fudian.dahc.pojo.entity.project.DahcProjectProcedureTrueing">
+        <result property="procedureId" column="procedure_id"/>
+        <result property="trueingId" column="trueing_id"/>
+        <result property="sort" column="sort"/>
+    </resultMap>
+
+
+    <update id="procedureInspectUpAndDown">
+        UPDATE dahc_project_procedure_trueing dpp1,dahc_project_procedure_trueing dpp2
+        <set>
+            dpp1.sort=(
+            SELECT t1.index1 FROM (
+            SELECT dpp3.sort index1 FROM dahc_project_procedure_trueing dpp3 WHERE dpp3.trueing_id=#{id2} and dpp3.procedure_id = #{procedureId}
+            ) t1
+            ),
+            dpp2.sort=(
+            SELECT t2.index2 FROM (
+            SELECT dpp4.sort index2 FROM dahc_project_procedure_trueing dpp4 WHERE dpp4.trueing_id=#{id1} and dpp4.procedure_id = #{procedureId}
+            ) t2
+        </set>
+            ) where dpp1.trueing_id=#{id1} AND dpp2.trueing_id=#{id2} and dpp1.procedure_id = #{procedureId} and dpp2.procedure_id = #{procedureId}
+    </update>
+
+</mapper>

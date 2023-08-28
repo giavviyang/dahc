@@ -1,0 +1,306 @@
+//主体
+.app-container-padding {
+  height: 100%;
+  width: 100%;
+  padding: 10px 10px 3px 10px;
+}
+
+.app-container {
+  height: 100%;
+  width: 100%;
+}
+
+//表单+按钮
+.iptAndBtn {
+  background-color: #f6f6f6;
+  height: 48px;
+  align-items: center;
+  display: flex;
+  padding-left: 10px;
+  width: 100%;
+  overflow: auto;
+
+  .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    white-space: nowrap;
+
+    .el-form-item__label {
+      padding-right: 5px;
+    }
+
+    .el-form-item__content {
+      width: 200px;
+      margin-right: 10px;
+      .el-select {
+        width: 100%;
+      }
+      .el-input {
+        width: 100%;
+      }
+    }
+  }
+
+  .daterange {
+    min-width: 320px;
+
+    .el-range-editor {
+      width: 240px;
+
+      .el-range-separator {
+        display: inline-block;
+        width: 20px;
+      }
+
+      .el-range-input:last-of-type {
+        margin-left: 5px;
+      }
+    }
+  }
+
+  .back {
+    //margin-right: 10px;
+    background-color: #1890ff;
+    color: #fff;
+  }
+}
+
+//纯按钮
+.btn {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: auto;
+  //padding-right: 100px;
+  box-shadow: none;
+
+  .el-button {
+    margin: 0 10px 0 5px;
+  }
+}
+
+//弹框标题底部样式
+.dialog-style {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .el-dialog:not(.is-fullscreen) {
+    margin-top: 0 !important;
+  }
+
+  .el-dialog {
+    //margin-top: 0;
+    margin: 0 auto;
+    max-height: 95%;
+    min-height: 5%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+
+    & .el-dialog__header {
+      background: rgba(204, 204, 204, 0.18);
+      width: 100%;
+      padding: 10px;
+
+      .el-dialog__headerbtn {
+        top: 15px;
+      }
+
+      & .el-dialog__title {
+        font-weight: 600;
+        font-size: 14px;
+        color: #333;
+        letter-spacing: 1px;
+        opacity: .8;
+      }
+    }
+
+    & .el-dialog__body {
+      padding: 10px 15px;
+      font-size: 12px;
+      min-height: 130px;
+      overflow: auto;
+      //overflow: scroll;
+      //background-color: red;
+    }
+
+    & .el-dialog__footer {
+      background: rgba(204, 204, 204, 0.18);
+      width: 100%;
+      padding: 10px;
+    }
+
+    & .el-button + .el-button {
+      margin-left: 6px;
+    }
+  }
+}
+
+//弹窗表单
+.ipt {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  margin-top: 20px;
+  flex-wrap: wrap;
+
+  .el-form-item {
+    margin: 0;
+    width: 48%;
+    height: 50px;
+    display: flex;
+
+    .el-form-item__label {
+      width: 105px;
+      font-size: 13px;
+    }
+
+    .el-form-item__label:before {
+      padding-right: 4px;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    .el-form-item__content {
+      width: calc(100% - 100px);
+
+      p {
+        font-size: 12px;
+        line-height: 10px;
+        height: 20px;
+        border-bottom: 1px solid #ccc;
+      }
+
+      .el-input-number {
+        width: 100%;
+      }
+
+      .el-form-item__error {
+        top: 30px
+      }
+
+      .el-select {
+        width: 100%;
+      }
+
+      .el-textarea {
+        width: 100%;
+
+
+        .el-textarea__inner {
+          padding: 0 15px;
+          height: 28px;
+        }
+      }
+
+      .el-cascader {
+        width: 100%;
+
+        .el-input--suffix .el-input__inner {
+          padding-right: 15px;
+          padding-left: 25px;
+        }
+      }
+
+      .el-checkbox {
+        margin-right: 10px;
+      }
+
+      .el-date-editor {
+        width: 100%;
+
+        .el-input__icon {
+          width: 20px;
+        }
+
+        .el-input--suffix .el-input__inner {
+          padding-right: 15px;
+          padding-left: 25px;
+          //padding: 0 15px;
+        }
+      }
+
+      .el-input--suffix .el-input__inner {
+        padding-right: 15px;
+        padding-left: 25px;
+        //padding: 0 15px;
+      }
+
+      .el-input__inner {
+        padding-right: 15px;
+        padding-left: 25px;
+        //padding: 0 15px;
+      }
+    }
+  }
+
+  .remarks, .address {
+    //width: 640px;
+    width: 96%;
+
+    .el-form-item__content {
+      .el-textarea {
+        .el-textarea__inner {
+          padding: 3px 15px 0 25px;
+          //color: #606266;
+          font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
+        }
+      }
+    }
+  }
+
+  .dynamicIpt {
+    //width: 640px;
+    width: 90%;
+
+    .el-form-item__content {
+      display: inline-flex;
+
+      .el-input {
+        margin-right: 10px;
+      }
+
+      .el-button {
+        height: 28px;
+      }
+
+    }
+  }
+}
+
+//tabs样式
+.el-tabs {
+  height: 100%;
+
+  .el-tabs--left {
+    margin-right: 5px;
+  }
+
+  .el-tabs__content {
+    height: calc(100% - 45px);
+    padding: 5px 5px 0 5px;
+
+    .el-tab-pane {
+      height: 100%;
+      //.tablePage {
+      //  height: calc(100% - 100px);
+      //}
+    }
+  }
+}
+
+//提交按钮
+.subBtn {
+  width: 100%;
+  text-align: right;
+  padding-right: 5px;
+  margin-top: 5px;
+}
+
+.is-closable{
+  z-index: 1000 !important;
+}

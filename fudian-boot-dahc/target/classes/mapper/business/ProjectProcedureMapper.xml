@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fudian.dahc.mapper.project.ProjectProcedureMapper">
+
+
+    <resultMap id="queryProcedureAndTrueing" type="com.fudian.dahc.pojo.entity.project.DahcProjectProcedure">
+        <id property="id" column="id"/>
+        <result property="procedureName" column="procedure_name"/>
+        <result property="procedureType" column="procedure_type"/>
+        <result property="trueingType" column="trueing_type"/>
+        <result property="projectId" column="project_id"/>
+        <result property="procedureDesc" column="procedure_desc"/>
+        <result property="trueingPagePath" column="trueing_page_path"/>
+        <result property="sort" column="sort"/>
+        <collection property="dahcHcxTrueingManageList" javaType="java.util.List"
+                    ofType="com.fudian.dahc.pojo.entity.trueingManage.DahcHcxTrueingManagement">
+            <id property="id" column="cid"/>
+            <result property="trueingName" column="procedure_name"/>
+            <result property="tableType" column="procedure_type"/>
+            <result property="trueingDesc" column="trueing_type"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectProcedureAndT" resultMap="queryProcedureAndTrueing">
+        SELECT a.*, c.id as cid, c.*
+        FROM dahc_project_procedure a
+        LEFT JOIN dahc_project_procedure_trueing b ON a.id = b.procedure_id
+        LEFT JOIN dahc_hcx_trueing_management c ON b.trueing_id = c.id
+        <where>
+            <if test="pid != null and pid != ''">
+                a.id = #{pid}
+            </if>
+        </where>
+    </select>
+    <select id="queryUserProjectProcedure" resultMap="queryProcedureAndTrueing">
+        SELECT *
+        FROM dahc_project_procedure p
+        inner join dahc_sys_user_procedure u on u.procedure_id = p.id
+        where u.project_id = #{projectId}
+        <if test="userId!=null and userId != '' ">
+            and u.user_id = #{userId}
+        </if>
+        GROUP BY u.procedure_id
+        ORDER By p.sort asc
+    </select>
+
+
+    <select id="queryThePersonalProcedureTree" resultMap="queryProcedureAndTrueing">
+        SELECT *
+        FROM dahc_project_procedure p
+        left join dahc_sys_user_procedure up ON up.procedure_id = p.id
+        left join dahc_record_procedure_files f on p.id = f.procedure_id
+        WHERE p.project_id = #{projectId}
+        <if test="userId!=null and userId != '' ">
+            and up.user_id = #{userId}
+        </if>
+        and f.is_impeach = 0
+        GROUP BY p.id
+        ORDER BY p.sort
+    </select>
+
+    <select id="queryThePersonalTaskTree" resultMap="queryProcedureAndTrueing">
+        SELECT *
+        FROM dahc_project_procedure p
+        left join dahc_sys_user_procedure up ON up.procedure_id = p.id
+        <if test="userId!=null and userId != '' ">
+        left join dahc_record_procedure_files f on up.procedure_id = f.procedure_id
+        </if>
+        WHERE p.project_id = #{projectId}
+        <if test="userId!=null and userId != '' ">
+            and up.user_id = #{userId}
+        </if>
+/*        and f.is_impeach = 0*/
+        GROUP BY p.id
+        ORDER BY p.sort
+    </select>
+
+
+    <update id="modifyTheSort">
+        UPDATE dahc_project_procedure dpp1,dahc_project_procedure dpp2
+        <set>
+            dpp1.sort=(
+            SELECT t1.index1 FROM (
+            SELECT dpp3.sort index1 FROM dahc_project_procedure dpp3 WHERE dpp3.id=#{id2}
+            ) t1
+            ),
+            dpp2.sort=(
+            SELECT t2.index2 FROM (
+            SELECT dpp4.sort index2 FROM dahc_project_procedure dpp4 WHERE dpp4.id=#{id1}
+            ) t2
+        </set>
+        ) where dpp1.id=#{id1} AND dpp2.id=#{id2}
+    </update>
+
+</mapper>

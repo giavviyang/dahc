@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fudian.dahc.mapper.recordTrueing.DahcRecordProcedureFilesMapper">
+
+    <resultMap type="com.fudian.dahc.pojo.entity.recordTrueing.DahcRecordProcedureFiles"
+               id="DahcRecordProcedureFilesResult">
+        <result property="id" column="id"/>
+        <result property="filesName" column="files_name"/>
+        <result property="filesId" column="files_id"/>
+        <result property="procedureId" column="procedure_id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="isProcedureInspect" column="is_procedure_inspect"/>
+        <result property="inspectId" column="inspect_id"/>
+        <result property="impeachSolveId" column="impeach_solve_id"/>
+        <result property="isImpeach" column="is_impeach"/>
+        <result property="getTime" column="get_time"/>
+        <result property="trueingId" column="trueing_id"/>
+    </resultMap>
+
+    <resultMap type="com.fudian.dahc.pojo.dto.QueryDahcRecordProcedureFilesDto"
+               id="QueryRecordProcedureFilesResult">
+        <result property="id" column="id"/>
+        <result property="filesName" column="files_name"/>
+        <result property="filesId" column="files_id"/>
+        <result property="procedureId" column="procedure_id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="isProcedureInspect" column="is_procedure_inspect"/>
+        <result property="inspectId" column="inspect_id"/>
+        <result property="impeachSolveId" column="impeach_solve_id"/>
+        <result property="isImpeach" column="is_impeach"/>
+        <result property="getTime" column="get_time"/>
+        <result property="trueingId" column="trueing_id"/>
+        <result property="checkResultState" column="check_result_state"/>
+        <result property="isQuestion" column="is_question"/>
+    </resultMap>
+
+    <select id="queryElectronicArchivesDossierLevel" resultType="java.util.Map">
+
+        SELECT *, attr.id attrId ,files_id filesId ,files_name filesName
+        FROM dahc_record_procedure_files f
+        inner JOIN ${archiveLevelName} attr ON attr.id = f.files_id
+        WHERE 1 = 1
+        and f.procedure_id = #{procedureId}
+        AND f.is_procedure_inspect = #{isProcedureInspect}
+        <if test="isProcedureInspect == 2">
+            AND f.inspect_id = #{userId}
+        </if>
+        <if test="start == 0">
+            AND f.is_return_save = 1
+        </if>
+        <if test="caseNum!=null and caseNum!=''">
+            and attr.${attrOrder} like concat('%', #{caseNum}, '%')
+        </if>
+        ORDER BY f.get_time
+    </select>
+
+    <select id="queryBasedOnTheIDOfTheVerificationResult" resultType="java.util.Map">
+
+        SELECT *, attr.id attrId, files_id filesId, files_name filesName
+        FROM dahc_record_procedure_files f
+                 LEFT JOIN ${archiveLevelName} attr ON attr.id = f.files_id
+        WHERE 1 = 1
+          and f.procedure_id = #{procedureId}
+          AND f.is_procedure_inspect = '3'
+          and attr.${attrOrder} like concat('%', #{caseNum}, '%')
+        ORDER BY f.get_time
+    </select>
+
+    <select id="theIDDeterminesTheCurrentProcess" resultType="integer">
+        SELECT count(*) FROM `dahc_sys_user_procedure` p
+        inner join dahc_record_procedure_files f on p.procedure_id = f.procedure_id
+        where p.user_id = #{userId} and f.id in (
+        <foreach collection="fileIds" item="item" index="index" separator=",">
+            #{item}
+        </foreach>)
+    </select>
+
+
+    <!--    <select id="queryCaseDataBasedOnFileID" resultType="java.util.Map">
+            SELECT *,
+            attr.id aId,h.dt2_id attrId
+            FROM dahc_business_bulk_hook h
+            inner JOIN ${archiveLevelName} attr ON attr.id = h.dt2_id
+            WHERE h.archive_type_id = #{archiveId}
+            AND h.dt1_id = #{filesId}
+            AND attr.`status` = '2'
+            <if test="caseNum!=null and caseNum!= ''">
+                and attr.${attrOrder} like concat('%', #{caseNum}, '%')
+            </if>
+            ORDER BY ${attrOrderSequenceNumber}
+        </select>  -->
+
+    <select id="queryCaseDataBasedOnFileID" resultType="java.util.Map">
+        SELECT
+        attr2.attr0,attr2.attr1,attr2.attr2,attr2.attr3,attr2.attr4,attr2.attr5,attr2.attr6,attr2.attr7,attr2.attr8,attr2.attr9,attr2.attr10,
+        attr2.attr11,attr2.attr12,attr2.attr13,attr2.attr14,attr2.attr15,attr2.attr16,attr2.attr17,attr2.attr18,attr2.attr19,attr2.attr20,
+        attr2.attr21,attr2.attr22,attr2.attr23,attr2.attr24,attr2.attr25,attr2.attr26,attr2.attr27,attr2.attr28,attr2.attr29,attr2.attr30,
+        attr2.attr31,attr2.attr32,attr2.attr33,attr2.attr34,attr2.attr35,attr2.attr36,attr2.attr37,attr2.attr38,attr2.attr39,
+        attr2.id attrIdL,
+        Cast(attr2.id as char) attrId
+        FROM
+        ${ archiveLevelName1 } attr1
+        INNER JOIN ${ archiveLevelName2 } attr2 ON attr1.id = attr2.pid
+        WHERE
+        attr2.pid = #{filesId}
+        <if test="startTheVerification!= 1">
+            and attr1.`status` = '2'
+            <!-- and  attr2.`status` = '2' -->
+        </if>
+        <if test="caseNum!=null and caseNum!= ''">
+            and attr.${attrOrder} like concat('%', #{caseNum}, '%')
+        </if>
+        GROUP BY attr2.id
+        ORDER BY attr2.${attrOrderSequenceNumber}
+    </select>
+    <select id="queryElectronicArchivesDossierLevelTemplateTwo" resultType="java.util.Map">
+
+        SELECT *, attr.id attrId ,files_id filesId ,files_name filesName
+        FROM dahc_record_procedure_files f
+        inner JOIN ${archiveLevelName} attr ON attr.id = f.files_id
+        WHERE 1 = 1
+        and f.procedure_id = #{procedureId}
+        <if test="start == 0">
+            and f.is_return_save = 1
+        </if>
+        AND f.is_procedure_inspect = #{isProcedureInspect}
+        <!--        <if test="isProcedureInspect == '2'">-->
+        AND f.inspect_id = #{userId}
+        <!--        </if>-->
+        <if test="caseNum!=null and caseNum!=''">
+            and attr.${attrOrder} like concat('%', #{caseNum}, '%')
+        </if>
+        ORDER BY f.get_time
+    </select>
+
+    <select id="queryTheResultsOfTheVerificationWereNotCompleted"
+            parameterType="com.fudian.dahc.pojo.dto.RecordTrueingDto"
+            resultMap="DahcRecordProcedureFilesResult">
+
+        SELECT *
+        FROM dahc_record_procedure_files f
+        INNER JOIN dahc_record_trueing_result r ON f.id = r.record_procedure_files_id
+        WHERE f.procedure_id = #{dto.procedureId}
+        and f.inspect_id = #{dto.inspectId}
+        and r.is_inspect_accomplish = '1'
+        <if test="dto.fileNumberId!=null and dto.fileNumberId!=''">
+            and f.files_id = #{dto.fileNumberId}
+        </if>
+        ORDER BY f.get_time
+    </select>
+
+    <select id="categorizeDataBasedOnPages"
+            resultMap="QueryRecordProcedureFilesResult">
+        SELECT
+        *
+        FROM
+        dahc_record_procedure_files f
+        inner join dahc_project_procedure pd on pd.id = f.procedure_id
+        left join dahc_record_trueing_result r on r.record_procedure_files_id = f.id
+        WHERE
+        pd.trueing_page_path in (
+        <foreach collection="trueingPagePaths" item="item" index="index" separator=",">
+            #{item}
+        </foreach>
+        )
+        GROUP BY f.files_id,f.procedure_id
+    </select>
+
+    <sql id="selectDahcRecordProcedureFilesVo">
+        select id,
+               files_name,
+               files_id,
+               procedure_id,
+               project_id,
+               is_procedure_inspect,
+               inspect_id,
+               impeach_solve_id,
+               is_impeach,
+               get_time
+        from dahc_record_procedure_files
+    </sql>
+
+    <select id="querySuspectData"
+            parameterType="com.fudian.dahc.pojo.entity.recordTrueing.DahcRecordProcedureFiles"
+            resultMap="DahcRecordProcedureFilesResult">
+        SELECT *,p.id procedureId FROM `dahc_record_procedure_files` f
+        left join dahc_project_procedure p on f.procedure_id = p.id
+        <where>
+            <if test="id != null  and id != ''">and f.id = #{id}</if>
+            <if test="filesName != null  and filesName != ''">and f.files_name like concat('%', #{filesName}, '%')</if>
+            <if test="filesId != null  and filesId != ''">and f.files_id = #{filesId}</if>
+            <if test="procedureId != null  and procedureId != ''">and f.procedure_id = #{procedureId}</if>
+            <if test="projectId != null  and projectId != ''">and f.project_id = #{projectId}</if>
+            <if test="isProcedureInspect != null  and isProcedureInspect != ''">and f.is_procedure_inspect =
+                #{isProcedureInspect}
+            </if>
+            <if test="inspectId != null ">and f.inspect_id = #{inspectId}</if>
+            <if test="impeachSolveId != null ">and f.impeach_solve_id = #{impeachSolveId}</if>
+            <if test="isImpeach != null ">and f.is_impeach = #{isImpeach}</if>
+            <if test="getTime != null ">and f.get_time = #{getTime}</if>
+        </where>
+    </select>
+
+
+    <select id="selectDahcRecordProcedureFilesList"
+            parameterType="com.fudian.dahc.pojo.entity.recordTrueing.DahcRecordProcedureFiles"
+            resultMap="DahcRecordProcedureFilesResult">
+        <include refid="selectDahcRecordProcedureFilesVo"/>
+        <where>
+            <if test="id != null  and id != ''">and id = #{id}</if>
+            <if test="filesName != null  and filesName != ''">and files_name like concat('%', #{filesName}, '%')</if>
+            <if test="filesId != null  and filesId != ''">and files_id = #{filesId}</if>
+            <if test="procedureId != null  and procedureId != ''">and procedure_id = #{procedureId}</if>
+            <if test="projectId != null  and projectId != ''">and project_id = #{projectId}</if>
+            <if test="isProcedureInspect != null  and isProcedureInspect != ''">and is_procedure_inspect =
+                #{isProcedureInspect}
+            </if>
+            <if test="inspectId != null ">and inspect_id = #{inspectId}</if>
+            <if test="impeachSolveId != null ">and impeach_solve_id = #{impeachSolveId}</if>
+            <if test="isImpeach != null ">and is_impeach = #{isImpeach}</if>
+            <if test="getTime != null ">and get_time = #{getTime}</if>
+        </where>
+    </select>
+
+    <select id="theTaskManagementPageQueriesTheSuspectData"
+            parameterType="com.fudian.dahc.pojo.entity.recordTrueing.DahcRecordProcedureFiles"
+            resultMap="DahcRecordProcedureFilesResult">
+        <include refid="selectDahcRecordProcedureFilesVo"/>
+        <where>
+            <if test="id != null  and id != ''">and id = #{id}</if>
+            <if test="filesName != null  and filesName != ''">and files_name like concat('%', #{filesName}, '%')</if>
+            <if test="filesId != null  and filesId != ''">and files_id = #{filesId}</if>
+            <if test="procedureId != null  and procedureId != ''">and procedure_id = #{procedureId}</if>
+            <if test="projectId != null  and projectId != ''">and project_id = #{projectId}</if>
+            <if test="isProcedureInspect != null  and isProcedureInspect != ''">and is_procedure_inspect =
+                #{isProcedureInspect}
+            </if>
+            <if test="inspectId != null ">and inspect_id = #{inspectId}</if>
+            <if test="impeachSolveId != null ">and impeach_solve_id = #{impeachSolveId}</if>
+            <if test="isImpeach != null ">and is_impeach = #{isImpeach}</if>
+            <if test="getTime != null ">and get_time = #{getTime}</if>
+            and is_accomplish_inspect = #{isAccomplishInspect}
+        </where>
+        GROUP BY files_id
+    </select>
+</mapper>

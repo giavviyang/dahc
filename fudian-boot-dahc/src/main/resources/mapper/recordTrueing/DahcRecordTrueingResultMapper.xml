@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fudian.dahc.mapper.recordTrueing.DahcRecordTrueingResultMapper">
+
+
+    <delete id="deleteDahcRecordTrueingResultByIds" parameterType="arraylist">
+        delete from dahc_record_trueing_result where roll_id in
+        <foreach item="dto" collection="dtos" open="(" separator="," close=")">
+            #{dto.rollId}
+        </foreach>
+        and procedure_id in
+        <foreach item="dto" collection="dtos" open="(" separator="," close=")">
+            #{dto.procedureId}
+        </foreach>
+    </delete>
+
+    <resultMap type="com.fudian.dahc.pojo.dto.RecordTrueingDto"
+               id="queryInspectTableLists">
+        <result property="id" column="recordId"/>
+        <result property="trueingId" column="trueingId"/>
+        <result property="procedureId" column="procedureId"/>
+        <result property="trueingName" column="trueing_name"/>
+        <result property="rollId" column="roll_id"/>
+        <result property="checkUpdataType" column="check_updata_type"/>
+        <result property="checkUpdata" column="check_updata"/>
+        <result property="checkDesc" column="check_desc"/>
+        <result property="isQuestion" column="is_question"/>
+        <result property="checkResultState" column="check_result_state"/>
+        <result property="isMasterCopy" column="is_master_copy"/>
+        <result property="numberOfCases" column="number_of_cases"/>
+        <result property="pageNumFile" column="page_num_file"/>
+        <result property="isNumberOfCases" column="is_number_of_cases"/>
+        <result property="isPageNumFile" column="is_page_num_file"/>
+        <result property="inspectName" column="inspect_name"/>
+        <result property="inspectId" column="inspect_id"/>
+        <result property="inspectTime" column="inspect_time"/>
+        <result property="trueingScopeStair" column="trueing_scope_stair"/>
+        <result property="trueingDesc" column="trueing_desc"/>
+    </resultMap>
+    <select id="queryInspectTableList" parameterType="com.fudian.dahc.pojo.dto.RecordTrueingDto"
+            resultMap="queryInspectTableLists">
+        SELECT *, pp.id procedureId, ppt.trueing_id trueingId
+
+        FROM dahc_project_procedure pp
+                 LEFT JOIN (SELECT *
+                            FROM dahc_project_procedure_trueing pt
+                                     INNER JOIN dahc_hcx_trueing_management m on pt.trueing_id = m.id) ppt
+                           ON ppt.procedure_id = pp.id
+        where pp.id = #{recordTrueingDto.procedureId}
+        order by ppt.sort
+    </select>
+
+    <select id="doubtQueryVerificationResultData"
+            parameterType="com.fudian.dahc.pojo.dto.RecordTrueingDto"
+            resultMap="queryInspectTableLists">
+        SELECT *, procedure_id procedureId, trueing_id trueingId
+        FROM `dahc_record_trueing_result`
+        where
+              record_procedure_files_id = #{recordProcedureFilesId}
+          <if test="isQuestion != null">
+         <!-- and is_question = #{isQuestion} -->
+        and questionable_data = 1
+          </if>
+
+        GROUP BY trueing_id
+    </select>
+
+
+    <update id="modifyDoubtfulResultsInBulk"
+            parameterType="com.fudian.dahc.pojo.dto.UpdateImpeachResultDto">
+
+        UPDATE dahc_record_trueing_result
+        <set>
+                impeach_is_number_of_cases = 0,
+                <trim prefix="impeach_number_of_cases = case" suffix="end,">
+                    <foreach collection="updateImpeachResultDtos" item="item">
+                        when id=#{item.impeachCaseNumResultsIds} then #{item.impeachPageNumResults}
+                    </foreach>
+                </trim>
+
+                impeach_is_page_num_file = 0,
+                <trim prefix="impeach_page_num_file = case" suffix="end,">
+                    <foreach collection="updateImpeachResultDtos" item="item">
+                        when id=#{item.impeachCaseNumResultsIds} then #{item.impeachPageNumResults}
+                    </foreach>
+                </trim>
+
+        </set>
+
+        <where>
+            id in
+            <foreach collection="updateImpeachResultDtos" item="item" open="(" close=")" separator=",">
+                #{item.impeachCaseNumResultsIds}
+            </foreach>
+        </where>
+    </update>
+
+    <update id="modifyDoubtfulResultsInBulk1"
+            parameterType="com.fudian.dahc.pojo.dto.UpdateImpeachResultDto">
+
+        UPDATE dahc_record_trueing_result
+        <set>
+            <if test="state == 0">
+                impeach_is_number_of_cases = 0,
+                <trim prefix="impeach_number_of_cases = case" suffix="end,">
+                    <foreach collection="updateImpeachResultDtos" item="item">
+                        when id=#{item.impeachCaseNumResultsIds} then #{item.impeachPageNumResults}
+                    </foreach>
+                </trim>
+            </if>
+
+            <if test="state == 1">
+                impeach_is_page_num_file = 0,
+                <trim prefix="impeach_page_num_file = case" suffix="end,">
+                    <foreach collection="updateImpeachResultDtos" item="item">
+                        when id=#{item.impeachCaseNumResultsIds} then #{item.impeachPageNumResults}
+                    </foreach>
+                </trim>
+            </if>
+        </set>
+
+        <where>
+            id in
+            <foreach collection="updateImpeachResultDtos" item="item" open="(" close=")" separator=",">
+                #{item.impeachCaseNumResultsIds}
+            </foreach>
+        </where>
+    </update>
+
+    <!--    <update id="modifyDoubtfulResultsInBulk" parameterType="com.fudian.dahc.pojo.dto.UpdateImpeachResultDto">-->
+
+
+    <!--        <foreach collection="updateImpeachResultDtos" item="item" separator=",">-->
+    <!--            UPDATE dahc_record_trueing_result-->
+    <!--            set-->
+    <!--            <if test="state == 0">-->
+    <!--                impeach_is_number_of_cases = 0,impeach_number_of_cases = #{item.impeachPageNumResults}-->
+    <!--            </if>-->
+
+    <!--            <if test="state == 1">-->
+    <!--                impeach_is_page_num_file = 0, impeach_page_num_file = #{item.impeachPageNumResults}-->
+    <!--            </if>-->
+    <!--            where id = #{item.impeachCaseNumResultsIds}-->
+    <!--        </foreach>-->
+
+
+    <!--    </update>-->
+
+    <resultMap type="com.fudian.dahc.pojo.dto.RecordTrueingDto"
+               id="queryInspectTableList">
+        <result property="id" column="recordId"/>
+        <result property="trueingId" column="trueingId"/>
+        <result property="procedureId" column="procedureId"/>
+        <result property="trueingName" column="trueing_name"/>
+        <result property="rollId" column="roll_id"/>
+        <result property="procedureId" column="procedure_id"/>
+        <result property="trueingId" column="trueing_id"/>
+        <result property="checkUpdataType" column="check_updata_type"/>
+        <result property="checkUpdata" column="check_updata"/>
+        <result property="checkDesc" column="check_desc"/>
+        <result property="isQuestion" column="is_question"/>
+        <result property="checkResultState" column="check_result_state"/>
+        <result property="isMasterCopy" column="is_master_copy"/>
+        <result property="numberOfCases" column="number_of_cases"/>
+        <result property="pageNumFile" column="page_num_file"/>
+        <result property="isNumberOfCases" column="is_number_of_cases"/>
+        <result property="isPageNumFile" column="is_page_num_file"/>
+        <result property="inspectName" column="inspect_name"/>
+        <result property="inspectId" column="inspect_id"/>
+        <result property="inspectTime" column="inspect_time"/>
+        <result property="trueingScopeStair" column="trueing_scope_stair"/>
+        <result property="trueingDesc" column="trueing_desc"/>
+    </resultMap>
+
+    <select id="echoInspectTableList" parameterType="com.fudian.dahc.pojo.dto.RecordTrueingDto"
+            resultMap="queryInspectTableList">
+        SELECT r.id recordId,
+               r.trueing_name,
+               ppt.trueing_scope_stair,
+               ppt.trueing_desc,
+               r.roll_id,
+               ppt.trueing_id,
+               ppt.procedure_id,
+               r.check_updata,
+               r.check_updata_type,
+               r.check_desc,
+               r.is_question,
+               r.is_master_copy,
+               r.page_num_file,
+               r.number_of_cases,
+               r.is_number_of_cases,
+               r.is_page_num_file,
+               r.inspect_name,
+               r.inspect_id,
+               r.inspect_time
+        FROM (SELECT *
+              FROM dahc_project_procedure_trueing pt
+                       INNER JOIN dahc_hcx_trueing_management m ON pt.trueing_id = m.id) ppt
+                 LEFT JOIN
+             dahc_record_trueing_result r on ppt.procedure_id = r.procedure_id
+        WHERE ppt.procedure_id = '7fff58ffc78248dfb2ea86397b8eec20'
+          and r.roll_id = '222'
+          and r.is_inspect_accomplish = 1
+        GROUP BY r.id
+    </select>
+
+
+    <insert id="insertDahcRecordTrueingResults"
+            parameterType="java.util.List">
+        insert into dahc_record_trueing_result
+
+
+        ( id,
+        trueing_name,
+        roll_id,
+        procedure_id,
+        trueing_id,
+        check_result_state,
+        check_updata_type,
+        check_updata,
+        check_desc,
+        is_question,
+        is_master_copy,
+        inspect_name,
+        inspect_id,
+        inspect_time,
+        remark,
+        is_inspect_accomplish,
+        number_of_cases,
+        page_num_file,
+        is_number_of_cases,
+        is_page_num_file,
+        file_id,
+        record_procedure_files_id,
+        impeach_number_of_cases,
+        impeach_page_num_file,
+        impeach_is_number_of_cases,
+        impeach_is_page_num_file,
+        questionable_data
+        )
+
+
+        values
+        <foreach collection="dahcRecordTrueingResults" item="item" separator="," index="index">
+
+            (REPLACE(UUID(),"-",""),
+            #{item.trueingName},
+            #{item.rollId},
+            #{item.procedureId},
+            #{item.trueingId},
+            #{item.checkResultState},
+            #{item.checkUpdataType},
+            #{item.checkUpdata},
+            #{item.checkDesc},
+            #{item.isQuestion},
+            #{item.isMasterCopy},
+            #{item.inspectName},
+            #{item.inspectId},
+            now(),
+            #{item.remark},
+            #{item.isInspectAccomplish},
+            #{item.numberOfCases},
+            #{item.pageNumFile},
+            #{item.isNumberOfCases},
+            #{item.isPageNumFile},
+            #{item.fileId},
+            #{item.recordProcedureFilesId},
+            #{item.impeachNumberOfCases} ,
+            #{item.impeachPageNumFile},
+            #{item.impeachIsNumberOfCases},
+            #{item.impeachIsPageNumFile},
+            #{item.questionableData}
+            )
+
+        </foreach>
+    </insert>
+</mapper>

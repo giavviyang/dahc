@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fudian.dahc.mapper.project.ProjectTableMapper">
+
+    <resultMap id="queryListAndProcedure" type="com.fudian.dahc.pojo.entity.project.DahcProjectTable">
+        <result property="id" column="id"/>
+        <result property="projectName" column="project_name"/>
+        <result property="projectDesc" column="project_desc"/>
+        <result property="archiveTypeId" column="archive_type_id"/>
+        <collection property="dahcProjectProcedureList" javaType="java.util.List"
+                    ofType="com.fudian.dahc.pojo.entity.project.DahcProjectProcedure">
+            <id property="id" column="cid"/>
+            <result property="procedureName" column="procedure_name"/>
+            <result property="procedureType" column="procedure_type"/>
+            <result property="trueingType" column="trueing_type"/>
+            <result property="projectId" column="project_id"/>
+            <result property="procedureDesc" column="procedure_desc"/>
+        </collection>
+    </resultMap>
+
+<!--    <select id="selectListAndProcedure" resultMap="queryListAndProcedure">-->
+<!--        SELECT a.*, c.id as cid, c.*-->
+<!--        FROM dahc_project_table a-->
+<!--        LEFT JOIN dahc_project_table_procedure b ON a.id = b.table_id-->
+<!--        LEFT JOIN dahc_project_procedure c ON b.procedure_id = c.id-->
+<!--        <where>-->
+<!--            <if test="pid != null and pid != ''">-->
+<!--                a.id = #{pid}-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </select>-->
+
+
+    <select id="queryThePersonalProjectTree" resultMap="queryListAndProcedure">
+        SELECT *
+        FROM dahc_project_table t
+                 LEFT JOIN dahc_sys_user_procedure up ON up.project_id = t.id
+        WHERE
+              1=1
+              and t.project_state = 1
+          <if test="userId != null">
+          and up.user_id = #{userId}
+          </if>
+    </select>
+
+    <resultMap id="queryProjectState" type="com.fudian.dahc.pojo.dto.RecordTrueingDto">
+        <result property="projectId" column="projectId"/>
+        <result property="projectName" column="projectName"/>
+        <result property="procedureId" column="procedureId"/>
+        <result property="procedureName" column="procedureName"/>
+        <result property="projectState" column="projectState"/>
+    </resultMap>
+    <select id="queryProjectState" resultMap="queryProjectState">
+        SELECT ppt.procedure_id procedureId,
+        p.id projectId,
+        p.project_state projectState,
+        p.project_name projectName,
+        ppt.procedure_name procedureName
+        FROM `dahc_hcx_trueing_management` m
+        INNER JOIN (SELECT t.procedure_id, t.trueing_id, pd.project_id,pd.procedure_name
+        FROM `dahc_project_procedure` pd
+        LEFT JOIN dahc_project_procedure_trueing t ON pd.id = t.procedure_id) ppt
+        ON ppt.trueing_id = m.id
+        inner join dahc_project_table p on ppt.project_id = p.id
+        where m.id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        GROUP BY p.id
+    </select>
+
+
+    <select id="1232">
+        SELECT t.id,
+               t.procedure_name,
+               t.procedure_type,
+               t.trueing_type,
+               t.project_id,
+               t.procedure_desc,
+               t.trueing_id,
+               t.sort,
+               t.create_by_string,
+               t.create_by,
+               t.create_time,
+               t.update_by,
+               t.update_time,
+               t.project_id AS projectIda
+        FROM dahc_project_procedure t
+        WHERE (t.project_id = ?)
+        ORDER BY t.sort ASC LIMIT ?
+    </select>
+
+
+</mapper>
